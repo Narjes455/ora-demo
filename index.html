@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>أورا | نسخة عرض</title>
+<meta name="description" content="نسخة عرض تفاعلية من نظام أورا لإدارة المنشآت. كل البيانات وهمية.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🟢</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E9EEF0; --win:#FFFFFF; --side:#123B47; --side-ink:#CFE3E8; --side-act:#1E5664;
+  --ink:#16262C; --muted:#5D7178; --line:#DCE4E7; --soft:#F4F7F8;
+  --brand:#1F6F7E; --accent:#E9A23B; --ok:#1E8C5A; --warn:#C98512; --bad:#C2413A;
+  --font:"Readex Pro",Tahoma,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0C1619; --win:#14232A; --side:#0A1C22; --side-ink:#A9C4CB; --side-act:#18343D;
+    --ink:#E3ECEE; --muted:#93A9AF; --line:#24383F; --soft:#1A2C33;
+    --brand:#5BB4C4; --accent:#F0B656; --ok:#4CC08A; --warn:#E3A53A; --bad:#E06A62;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0C1619; --win:#14232A; --side:#0A1C22; --side-ink:#A9C4CB; --side-act:#18343D;
+  --ink:#E3ECEE; --muted:#93A9AF; --line:#24383F; --soft:#1A2C33;
+  --brand:#5BB4C4; --accent:#F0B656; --ok:#4CC08A; --warn:#E3A53A; --bad:#E06A62;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html,body{height:100%}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);font-size:15px;line-height:1.6}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+[hidden]{display:none!important}
+
+.demo-bar{background:var(--accent);color:#2A1C05;text-align:center;font-size:.85rem;font-weight:600;padding:.35rem 1rem}
+.demo-bar a{color:inherit}
+
+/* ===== login ===== */
+#login{min-height:calc(100% - 32px);display:flex;align-items:center;justify-content:center;padding:2rem 1rem}
+.login-box{width:100%;max-width:560px;background:var(--win);border:1px solid var(--line);border-radius:14px;padding:2.2rem;box-shadow:0 10px 30px rgba(0,0,0,.06)}
+.logo{display:flex;align-items:center;gap:.7rem;margin-bottom:.4rem}
+.logo i{width:42px;height:42px;border-radius:10px;background:var(--brand);display:grid;place-items:center;color:#fff;font-style:normal;font-weight:700;font-size:1.3rem}
+.logo b{font-size:1.7rem}
+.login-box>p{color:var(--muted);margin-bottom:1.4rem}
+.roles{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+.role{background:var(--soft);border:2px solid var(--line);border-radius:10px;padding:.9rem;text-align:right}
+.role:hover{border-color:var(--brand)}
+.role b{display:block}
+.role span{font-size:.85rem;color:var(--muted)}
+.login-note{margin-top:1.2rem;font-size:.85rem;color:var(--muted);border-inline-start:3px solid var(--accent);padding-inline-start:.7rem}
+
+/* ===== app window ===== */
+#app{height:calc(100% - 32px);padding:1rem;display:flex}
+.window{flex:1;display:flex;flex-direction:column;background:var(--win);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.08)}
+.titlebar{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.5rem .9rem;border-bottom:1px solid var(--line);background:var(--soft)}
+.titlebar .t{font-weight:600;font-size:.9rem}
+.titlebar .t small{color:var(--muted);font-weight:400}
+.close-btn{background:var(--bad);color:#fff;border:0;border-radius:6px;padding:.3rem .8rem;font-size:.85rem;font-weight:600}
+.shell{flex:1;display:flex;min-height:0}
+nav{width:210px;background:var(--side);color:var(--side-ink);padding:1rem .7rem;display:flex;flex-direction:column;gap:.2rem;flex-shrink:0}
+.me{padding:.4rem .6rem 1rem;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:.6rem}
+.me b{display:block;color:#fff;font-size:.95rem}
+.me span{font-size:.8rem}
+nav button{background:none;border:0;text-align:right;padding:.55rem .7rem;border-radius:8px;color:inherit;display:flex;gap:.6rem;align-items:center}
+nav button:hover{background:var(--side-act)}
+nav button.on{background:var(--side-act);color:#fff;font-weight:600;box-shadow:inset -3px 0 0 var(--accent)}
+main{flex:1;overflow:auto;padding:1.5rem 1.8rem}
+.head{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:1.2rem}
+.head h1{font-size:1.4rem}
+.btn{background:var(--brand);color:#fff;border:0;border-radius:8px;padding:.5rem 1rem;font-weight:600}
+.btn.ghost{background:none;color:var(--brand);border:1px solid var(--brand)}
+.btn.sm{padding:.2rem .6rem;font-size:.82rem}
+
+.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.9rem;margin-bottom:1.5rem}
+.kpi{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:1rem}
+.kpi span{font-size:.85rem;color:var(--muted)}
+.kpi b{display:block;font-size:1.5rem;direction:ltr;text-align:right}
+.panel{border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:1.2rem}
+.panel h2{font-size:1rem;padding:.7rem 1rem;background:var(--soft);border-bottom:1px solid var(--line)}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:520px}
+th,td{padding:.6rem .9rem;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-size:.82rem;color:var(--muted);font-weight:600}
+tr:last-child td{border-bottom:0}
+td.num{direction:ltr;text-align:right;font-variant-numeric:tabular-nums}
+.pill{font-size:.78rem;font-weight:600;padding:.1rem .55rem;border-radius:20px;border:1px solid currentColor}
+.pill.ok{color:var(--ok)}.pill.warn{color:var(--warn)}.pill.bad{color:var(--bad)}.pill.mute{color:var(--muted)}
+.feed li{list-style:none;padding:.6rem 1rem;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:1rem}
+.feed li:last-child{border-bottom:0}
+.feed small{color:var(--muted);white-space:nowrap}
+.tools{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1rem}
+.tools input,.tools select{background:var(--win);border:1px solid var(--line);border-radius:8px;padding:.45rem .7rem;min-width:200px}
+.empty{padding:1.5rem;text-align:center;color:var(--muted)}
+.locked{font-size:.85rem;color:var(--muted);margin-bottom:1rem}
+
+/* modal + toast */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;padding:1rem;z-index:20}
+.modal form{background:var(--win);border-radius:12px;padding:1.5rem;width:100%;max-width:420px;display:grid;gap:.8rem}
+.modal h3{font-size:1.15rem}
+.modal label{display:grid;gap:.25rem;font-size:.88rem;color:var(--muted)}
+.modal input,.modal select{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:.5rem .7rem;color:var(--ink)}
+.modal .row{display:flex;gap:.6rem;justify-content:flex-start;margin-top:.4rem}
+.toast{position:fixed;bottom:calc(1.2rem + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--ink);color:var(--win);padding:.7rem 1.2rem;border-radius:10px;font-weight:600;z-index:30;box-shadow:0 8px 20px rgba(0,0,0,.2)}
+
+/* bye screen */
+#bye{min-height:calc(100% - 32px);display:flex;align-items:center;justify-content:center;padding:2rem 1rem}
+#bye .login-box{text-align:center}
+#bye .big{font-size:2.2rem;margin-bottom:.5rem}
+#bye dl{display:grid;grid-template-columns:auto auto;justify-content:center;gap:.3rem 1.2rem;margin:1.2rem 0 1.5rem}
+#bye dt{color:var(--muted)}
+#bye dd{font-weight:600;direction:ltr;text-align:right}
+
+@media (max-width:760px){
+  #app{padding:0}
+  .window{border-radius:0;border:0}
+  .shell{flex-direction:column}
+  nav{width:auto;flex-direction:row;overflow-x:auto;padding:.5rem;gap:.3rem}
+  .me{display:none}
+  nav button{white-space:nowrap}
+  nav button.on{box-shadow:inset 0 -3px 0 var(--accent)}
+  main{padding:1.1rem}
+  .roles{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="demo-bar">نسخة عرض من نظام أورا، وكل البيانات فيها وهمية وتتصفّر عند تحديث الصفحة. <a href="https://narjes455.github.io">بورتفايل نرجس العمري</a></div>
+
+<!-- ===== Login ===== -->
+<section id="login">
+  <div class="login-box">
+    <div class="logo"><i>أ</i><b>أورا</b></div>
+    <p>نظام لإدارة المنشآت. اختر دوراً للدخول وشوف كيف تتغير الأقسام حسب الصلاحية.</p>
+    <div class="roles" id="roleList"></div>
+    <p class="login-note">بمجرد الدخول يتسجل حضورك تلقائياً، ولما تضغط «إغلاق النظام» يتسجل انصرافك.</p>
+  </div>
+</section>
+
+<!-- ===== App ===== -->
+<section id="app" hidden>
+  <div class="window">
+    <div class="titlebar">
+      <div class="t">أورا <small id="tbRole"></small></div>
+      <button class="close-btn" id="closeBtn">إغلاق النظام</button>
+    </div>
+    <div class="shell">
+      <nav id="nav"></nav>
+      <main id="main"></main>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Checkout ===== -->
+<section id="bye" hidden>
+  <div class="login-box">
+    <div class="big">👋</div>
+    <h2>تم تسجيل انصرافك</h2>
+    <dl id="byeInfo"></dl>
+    <button class="btn" id="againBtn">رجوع لشاشة الدخول</button>
+  </div>
+</section>
+
+<div class="modal" id="modal" hidden></div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const esc = v => String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money = n => n.toLocaleString('en-US') + ' ر.س';
+const clock = d => {
+  let h = d.getHours(), m = String(d.getMinutes()).padStart(2,'0');
+  const p = h < 12 ? 'ص' : 'م'; h = h % 12 || 12;
+  return `${h}:${m} ${p}`;
+};
+const at = (h, m) => { const d = new Date(); d.setHours(h, m, 0, 0); return d; };
+const todayISO = () => new Date().toISOString().slice(0,10);
+let toastT;
+function toast(msg){
+  const t = $('#toast'); t.textContent = msg; t.hidden = false;
+  clearTimeout(toastT); toastT = setTimeout(() => t.hidden = true, 2600);
+}
+
+/* ---------- roles ---------- */
+const ROLES = {
+  exec:  {name:'الإدارة التنفيذية', user:'م. خالد الحربي', desc:'كل الأقسام', pages:['dash','emp','att','workers','contracts','invoices','ledger']},
+  hr:    {name:'الموارد البشرية',   user:'أ. هند السالم',  desc:'الموظفين والعمالة والحضور', pages:['dash','emp','workers','att']},
+  acc:   {name:'المحاسبة',           user:'أ. فهد القحطاني', desc:'الفواتير والكشوفات', pages:['dash','invoices','ledger','contracts']},
+  entry: {name:'إدخال البيانات',     user:'أ. ريم العتيبي', desc:'العقود وتفاصيلها', pages:['dash','contracts']}
+};
+const PAGES = {
+  dash:{t:'الرئيسية',i:'🏠'}, emp:{t:'الموظفين',i:'👥'}, workers:{t:'العمالة',i:'🦺'}, att:{t:'الحضور',i:'🕘'},
+  contracts:{t:'العقود',i:'📑'}, invoices:{t:'الفواتير',i:'🧾'}, ledger:{t:'كشوف الحساب',i:'📒'}
+};
+// who can add/edit in each page
+const CAN_EDIT = {emp:['exec','hr'], workers:['exec','hr'], contracts:['exec','entry'], invoices:['exec','acc']};
+
+/* ---------- fake data ---------- */
+let DB;
+function seed(){
+  DB = {
+    employees:[
+      {name:'م. خالد الحربي', job:'مدير تنفيذي', dept:'الإدارة', start:'2019-03-01'},
+      {name:'أ. هند السالم', job:'أخصائية موارد بشرية', dept:'الموارد البشرية', start:'2021-06-15'},
+      {name:'أ. فهد القحطاني', job:'محاسب', dept:'المالية', start:'2020-01-10'},
+      {name:'أ. ريم العتيبي', job:'مدخلة بيانات', dept:'العقود', start:'2023-02-05'},
+      {name:'م. سلطان الشهري', job:'مهندس موقع', dept:'المشاريع', start:'2022-09-20'},
+      {name:'م. لمى الزهراني', job:'مهندسة تخطيط', dept:'المشاريع', start:'2024-04-01'},
+      {name:'أ. عبدالله المطيري', job:'مشرف مشتريات', dept:'المشتريات', start:'2021-11-11'}
+    ],
+    workers:[
+      {name:'راجو كومار', job:'نجار', site:'مشروع حي النخيل', nat:'الهند'},
+      {name:'محمد رفيق', job:'كهربائي', site:'مشروع حي النخيل', nat:'بنغلاديش'},
+      {name:'أحمد سعيد', job:'سباك', site:'صيانة مجمع الواحة', nat:'مصر'},
+      {name:'جون ريس', job:'مساعد فني', site:'توسعة مستودع الأفق', nat:'الفلبين'},
+      {name:'عمران خان', job:'لحّام', site:'توسعة مستودع الأفق', nat:'باكستان'}
+    ],
+    attendance:[
+      {name:'م. سلطان الشهري', in:at(7,12), out:null},
+      {name:'أ. عبدالله المطيري', in:at(7,48), out:null},
+      {name:'م. لمى الزهراني', in:at(8,5), out:null}
+    ],
+    clients:['شركة الريان للتطوير','مجموعة الواحة التجارية','مؤسسة الأفق اللوجستية'],
+    contracts:[
+      {no:'C-1001', client:'شركة الريان للتطوير', project:'مشروع حي النخيل السكني', value:1850000, start:'2025-01-15', end:'2026-12-30'},
+      {no:'C-1002', client:'مجموعة الواحة التجارية', project:'صيانة مجمع الواحة', value:420000, start:'2025-06-01', end:'2026-05-31'},
+      {no:'C-1003', client:'مؤسسة الأفق اللوجستية', project:'توسعة مستودع الأفق', value:960000, start:'2026-02-10', end:'2027-02-10'}
+    ],
+    invoices:[
+      {no:'INV-301', client:'شركة الريان للتطوير', contract:'C-1001', amount:370000, date:'2025-03-01', paid:'2025-03-20'},
+      {no:'INV-302', client:'شركة الريان للتطوير', contract:'C-1001', amount:462500, date:'2025-08-01', paid:'2025-08-28'},
+      {no:'INV-303', client:'مجموعة الواحة التجارية', contract:'C-1002', amount:105000, date:'2025-09-01', paid:'2025-09-15'},
+      {no:'INV-304', client:'مجموعة الواحة التجارية', contract:'C-1002', amount:105000, date:'2026-01-01', paid:null},
+      {no:'INV-305', client:'مؤسسة الأفق اللوجستية', contract:'C-1003', amount:288000, date:'2026-04-01', paid:'2026-04-22'},
+      {no:'INV-306', client:'شركة الريان للتطوير', contract:'C-1001', amount:462500, date:'2026-08-01', paid:null}
+    ],
+    activity:[]
+  };
+}
+
+/* ---------- session ---------- */
+let role = null, page = 'dash', me = null;
+
+function renderRoles(){
+  $('#roleList').innerHTML = Object.entries(ROLES).map(([k,r]) =>
+    `<button class="role" data-role="${k}"><b>${r.name}</b><span>${r.user}، ${r.desc}</span></button>`).join('');
+  document.querySelectorAll('.role').forEach(b => b.onclick = () => login(b.dataset.role));
+}
+
+function login(k){
+  role = k; page = 'dash';
+  const r = ROLES[k];
+  // auto check-in on opening the system
+  me = {name:r.user, in:new Date(), out:null};
+  DB.attendance = DB.attendance.filter(a => a.name !== r.user);
+  DB.attendance.push(me);
+  log(`${r.user} سجّل دخول للنظام`);
+  $('#login').hidden = true; $('#bye').hidden = true; $('#app').hidden = false;
+  $('#tbRole').textContent = `| ${r.name}`;
+  renderNav(); renderPage();
+  toast(`تم تسجيل حضورك الساعة ${clock(me.in)}`);
+}
+
+function logout(){
+  me.out = new Date();
+  const mins = Math.max(1, Math.round((me.out - me.in) / 60000));
+  $('#byeInfo').innerHTML = `
+    <dt>الموظف</dt><dd>${esc(me.name)}</dd>
+    <dt>الحضور</dt><dd>${clock(me.in)}</dd>
+    <dt>الانصراف</dt><dd>${clock(me.out)}</dd>
+    <dt>مدة الجلسة</dt><dd>${mins} دقيقة</dd>`;
+  log(`${me.name} أغلق النظام وتسجّل انصرافه`);
+  $('#app').hidden = true; $('#bye').hidden = false;
+}
+
+function log(msg){ DB.activity.unshift({msg, t:new Date()}); DB.activity = DB.activity.slice(0,8); }
+const canEdit = p => (CAN_EDIT[p] || []).includes(role);
+
+function renderNav(){
+  $('#nav').innerHTML = `<div class="me"><b>${esc(ROLES[role].user)}</b><span>${ROLES[role].name}</span></div>` +
+    ROLES[role].pages.map(p => `<button data-p="${p}" class="${p===page?'on':''}"><span aria-hidden="true">${PAGES[p].i}</span>${PAGES[p].t}</button>`).join('');
+  document.querySelectorAll('#nav button').forEach(b => b.onclick = () => { page = b.dataset.p; renderNav(); renderPage(); });
+}
+
+/* ---------- pages ---------- */
+const status = inv => {
+  if (inv.paid) return '<span class="pill ok">مدفوعة</span>';
+  const days = (Date.now() - new Date(inv.date)) / 864e5;
+  return days > 60 ? '<span class="pill bad">متأخرة</span>' : '<span class="pill warn">مستحقة</span>';
+};
+const table = (cols, rows) => rows.length
+  ? `<div class="scroll"><table><thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${rows.join('')}</tbody></table></div>`
+  : '<div class="empty">لا توجد بيانات</div>';
+const head = (title, btn) => `<div class="head"><h1>${title}</h1>${btn||''}</div>`;
+
+function renderPage(){
+  const m = $('#main'); m.scrollTop = 0;
+  const f = {dash, emp, workers, att, contracts, invoices, ledger}[page];
+  m.innerHTML = f();
+  bind();
+}
+
+function dash(){
+  const unpaid = DB.invoices.filter(i => !i.paid);
+  const k = {
+    emp:      ['الموظفين', DB.employees.length],
+    workers:  ['العمالة', DB.workers.length],
+    att:      ['الحاضرين اليوم', DB.attendance.filter(a=>!a.out).length],
+    contracts:['العقود النشطة', DB.contracts.length],
+    value:    ['قيمة العقود', money(DB.contracts.reduce((s,c)=>s+c.value,0))],
+    unpaid:   ['مبالغ مستحقة', money(unpaid.reduce((s,i)=>s+i.amount,0))]
+  };
+  const show = {exec:['emp','att','contracts','value','unpaid'], hr:['emp','workers','att'], acc:['contracts','value','unpaid'], entry:['contracts','value']}[role];
+  return head(`أهلاً، ${esc(ROLES[role].user)}`) +
+    `<div class="kpis">${show.map(x=>`<div class="kpi"><span>${k[x][0]}</span><b>${k[x][1]}</b></div>`).join('')}</div>
+     <div class="panel"><h2>آخر النشاطات</h2><ul class="feed">${
+       DB.activity.map(a=>`<li><span>${esc(a.msg)}</span><small>${clock(a.t)}</small></li>`).join('') || '<li>لا يوجد</li>'
+     }</ul></div>`;
+}
+
+function emp(){
+  return head('الموظفين', canEdit('emp') ? '<button class="btn" data-add="emp">+ موظف جديد</button>' : '') +
+    `<div class="tools"><input type="search" placeholder="بحث بالاسم أو القسم" data-filter></div>` +
+    `<div class="panel">${table(['الاسم','الوظيفة','القسم','تاريخ المباشرة'],
+      DB.employees.map(e=>`<tr data-row="${esc(e.name+' '+e.dept)}"><td>${esc(e.name)}</td><td>${esc(e.job)}</td><td>${esc(e.dept)}</td><td class="num">${esc(e.start)}</td></tr>`))}</div>`;
+}
+
+function workers(){
+  return head('العمالة', canEdit('workers') ? '<button class="btn" data-add="workers">+ عامل جديد</button>' : '') +
+    `<p class="locked">سجلات فقط. العمالة ما عندهم حسابات دخول للنظام.</p>` +
+    `<div class="panel">${table(['الاسم','المهنة','الموقع','الجنسية'],
+      DB.workers.map(w=>`<tr><td>${esc(w.name)}</td><td>${esc(w.job)}</td><td>${esc(w.site)}</td><td>${esc(w.nat)}</td></tr>`))}</div>`;
+}
+
+function att(){
+  return head('الحضور والانصراف — اليوم') +
+    `<p class="locked">الحضور يتسجل تلقائياً مع فتح النظام، والانصراف مع إغلاقه. ما يحتاج الموظف يسوي شي.</p>` +
+    `<div class="panel">${table(['الموظف','الحضور','الانصراف','الحالة'],
+      DB.attendance.slice().sort((a,b)=>a.in-b.in).map(a=>`<tr><td>${esc(a.name)}${a===me?' (أنت)':''}</td><td>${clock(a.in)}</td><td>${a.out?clock(a.out):'—'}</td><td>${a.out?'<span class="pill mute">انصرف</span>':'<span class="pill ok">في النظام</span>'}</td></tr>`))}</div>`;
+}
+
+function contracts(){
+  const edit = canEdit('contracts');
+  return head('العقود', edit ? '<button class="btn" data-add="contracts">+ عقد جديد</button>' : '') +
+    (edit ? '' : '<p class="locked">عرض فقط. إضافة العقود من صلاحية إدخال البيانات.</p>') +
+    `<div class="panel">${table(['رقم العقد','العميل','المشروع','القيمة','من','إلى'],
+      DB.contracts.map(c=>`<tr><td>${esc(c.no)}</td><td>${esc(c.client)}</td><td>${esc(c.project)}</td><td class="num">${money(c.value)}</td><td class="num">${esc(c.start)}</td><td class="num">${esc(c.end)}</td></tr>`))}</div>`;
+}
+
+function invoices(){
+  const edit = canEdit('invoices');
+  return head('الفواتير', edit ? '<button class="btn" data-add="invoices">+ فاتورة جديدة</button>' : '') +
+    `<div class="tools"><select data-status><option value="">كل الحالات</option><option value="open">غير مدفوعة</option><option value="paid">مدفوعة</option></select></div>` +
+    `<div class="panel">${table(['رقم الفاتورة','العميل','العقد','المبلغ','التاريخ','الحالة',''],
+      DB.invoices.map((i,ix)=>`<tr data-st="${i.paid?'paid':'open'}"><td>${esc(i.no)}</td><td>${esc(i.client)}</td><td>${esc(i.contract)}</td><td class="num">${money(i.amount)}</td><td class="num">${esc(i.date)}</td><td>${status(i)}</td><td>${!i.paid&&edit?`<button class="btn sm ghost" data-pay="${ix}">تسجيل سداد</button>`:''}</td></tr>`))}</div>`;
+}
+
+let ledgerClient = null;
+function ledger(){
+  ledgerClient = ledgerClient || DB.clients[0];
+  const rows = [];
+  DB.invoices.filter(i=>i.client===ledgerClient).forEach(i=>{
+    rows.push({d:i.date, desc:`فاتورة ${i.no}`, dr:i.amount, cr:0});
+    if (i.paid) rows.push({d:i.paid, desc:`سداد فاتورة ${i.no}`, dr:0, cr:i.amount});
+  });
+  rows.sort((a,b)=>a.d.localeCompare(b.d));
+  let bal = 0;
+  const tr = rows.map(r=>{ bal += r.dr - r.cr; return `<tr><td class="num">${r.d}</td><td>${esc(r.desc)}</td><td class="num">${r.dr?money(r.dr):''}</td><td class="num">${r.cr?money(r.cr):''}</td><td class="num">${money(bal)}</td></tr>`; });
+  return head('كشف حساب عميل') +
+    `<div class="tools"><select data-client>${DB.clients.map(c=>`<option ${c===ledgerClient?'selected':''}>${esc(c)}</option>`).join('')}</select></div>` +
+    `<div class="kpis"><div class="kpi"><span>الرصيد المستحق</span><b>${money(bal)}</b></div></div>` +
+    `<div class="panel">${table(['التاريخ','البيان','مدين','دائن','الرصيد'], tr)}</div>`;
+}
+
+/* ---------- interactions ---------- */
+function bind(){
+  const f = $('[data-filter]');
+  if (f) f.oninput = () => document.querySelectorAll('[data-row]').forEach(r => r.hidden = !r.dataset.row.includes(f.value.trim()));
+  const st = $('[data-status]');
+  if (st) st.onchange = () => document.querySelectorAll('[data-st]').forEach(r => r.hidden = st.value && r.dataset.st !== st.value);
+  const cl = $('[data-client]');
+  if (cl) cl.onchange = () => { ledgerClient = cl.value; renderPage(); };
+  document.querySelectorAll('[data-pay]').forEach(b => b.onclick = () => {
+    const i = DB.invoices[b.dataset.pay]; i.paid = todayISO();
+    log(`${ROLES[role].user} سجّل سداد ${i.no}`); toast(`تم تسجيل سداد ${i.no}، وانعكس على كشف الحساب`); renderPage();
+  });
+  document.querySelectorAll('[data-add]').forEach(b => b.onclick = () => openForm(b.dataset.add));
+}
+
+const FORMS = {
+  emp:{title:'موظف جديد', fields:[['name','الاسم'],['job','الوظيفة'],['dept','القسم',['الإدارة','الموارد البشرية','المالية','العقود','المشاريع','المشتريات']],['start','تاريخ المباشرة','date']],
+       save:v=>{DB.employees.push(v); return `أضاف الموظف ${v.name}`;}},
+  workers:{title:'عامل جديد', fields:[['name','الاسم'],['job','المهنة'],['site','الموقع',()=>DB.contracts.map(c=>c.project)],['nat','الجنسية']],
+       save:v=>{DB.workers.push(v); return `أضاف العامل ${v.name}`;}},
+  contracts:{title:'عقد جديد', fields:[['client','العميل',()=>DB.clients],['project','المشروع'],['value','القيمة (ر.س)','number'],['start','البداية','date'],['end','النهاية','date']],
+       save:v=>{v.no='C-'+(1001+DB.contracts.length); v.value=+v.value; DB.contracts.push(v); return `أضاف العقد ${v.no}`;}},
+  invoices:{title:'فاتورة جديدة', fields:[['contract','العقد',()=>DB.contracts.map(c=>c.no)],['amount','المبلغ (ر.س)','number']],
+       save:v=>{const c=DB.contracts.find(x=>x.no===v.contract); const no='INV-'+(301+DB.invoices.length);
+                DB.invoices.push({no, client:c.client, contract:c.no, amount:+v.amount, date:todayISO(), paid:null}); return `أصدر الفاتورة ${no}`;}}
+};
+
+function openForm(k){
+  const F = FORMS[k], md = $('#modal');
+  md.innerHTML = `<form><h3>${F.title}</h3>${F.fields.map(([n,l,t])=>{
+    const opts = typeof t==='function' ? t() : Array.isArray(t) ? t : null;
+    return `<label>${l}${opts ? `<select name="${n}" required>${opts.map(o=>`<option>${esc(o)}</option>`).join('')}</select>`
+      : `<input name="${n}" type="${t||'text'}" ${t==='number'?'min="1"':''} ${t==='date'?`value="${todayISO()}"`:''} required>`}</label>`;
+  }).join('')}<div class="row"><button class="btn" type="submit">حفظ</button><button class="btn ghost" type="button" data-cancel>إلغاء</button></div></form>`;
+  md.hidden = false;
+  md.querySelector('input,select').focus();
+  md.querySelector('[data-cancel]').onclick = () => md.hidden = true;
+  md.querySelector('form').onsubmit = e => {
+    e.preventDefault();
+    const v = Object.fromEntries(new FormData(e.target));
+    const msg = F.save(v); log(`${ROLES[role].user} ${msg}`);
+    md.hidden = true; toast('تم الحفظ'); renderPage();
+  };
+}
+$('#modal').onclick = e => { if (e.target.id === 'modal') e.target.hidden = true; };
+document.addEventListener('keydown', e => { if (e.key === 'Escape') $('#modal').hidden = true; });
+
+$('#closeBtn').onclick = logout;
+$('#againBtn').onclick = () => { $('#bye').hidden = true; $('#login').hidden = false; };
+
+seed(); renderRoles();
+</script>
+</body>
+</html>
